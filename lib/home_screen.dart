@@ -28,21 +28,48 @@ class _HomeScreenState extends State<HomeScreen> {
           var data = box.values.toList().cast<NotesModel>();
           return ListView.builder(
             itemCount: box.length,
-            itemBuilder: (context, index){
-            return Card(
-              elevation: 4,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: .start, mainAxisAlignment: .start,
-                  children: [
-                    Text(data[index].title.toString()),
-                    Text(data[index].description.toString(), maxLines: 2,overflow: .ellipsis,)
-                  ],
+            itemBuilder: (context, index) {
+              return Card(
+                elevation: 4,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 16,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: .start,
+                    mainAxisAlignment: .start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            data[index].title.toString(),
+                            style: TextStyle(fontWeight: .bold, fontSize: 20),
+                          ),
+                          Spacer(),
+                          // edit
+                          TextButton(onPressed: () {}, child: Icon(Icons.edit)),
+                          // delete
+                          TextButton(
+                            onPressed: () {
+                              delete(data[index]);
+                            },
+                            child: Icon(Icons.delete, color: Colors.red),
+                          ),
+                        ],
+                      ),
+                      Text(
+                        data[index].description.toString(),
+                        maxLines: 2,
+                        overflow: .ellipsis,
+                        style: TextStyle(fontSize: 14),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            );
-          });
+              );
+            },
+          );
         },
       ),
       floatingActionButton: FloatingActionButton(
@@ -53,6 +80,8 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+  // add new tsk.
 
   Future<void> _showMyDialog() async {
     return showDialog(
@@ -122,5 +151,10 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       },
     );
+  }
+  // delete task
+
+  void delete(NotesModel notesModel) async{
+    await notesModel.delete();
   }
 }
