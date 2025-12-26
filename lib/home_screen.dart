@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:hive_notes/Boxes/boxes.dart';
+import 'package:hive_notes/models/notes_model.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -76,11 +78,13 @@ class _HomeScreenState extends State<HomeScreen> {
               },
               child: Text("Cancel"),
             ),
-            
+
             // Add Button
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
+                final data = NotesModel(title: _titleTEController.text, description: _descriptionTEController.text);
+                final box = Boxes.getData();
+                box.add(data);
               },
               child: Text("Add"),
             ),
