@@ -19,39 +19,12 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: Column(
         children: [
-          FutureBuilder(future: Hive.openBox('db1'), 
-          builder: (BuildContext context, AsyncSnapshot<Box<dynamic>> snapshot){
-            return ListTile(
-              /// there [Data] cant be null
-              title: Text(snapshot.data?.get('name') ?? "null"),
-              subtitle: Text(snapshot.data?.get('details')?['location'] ?? "no location"),
-              trailing: IconButton(onPressed: (){
-                snapshot.data!.put('name', 'roman');
-                // snapshot.data!.delete('name');
-                setState(() {
-                  
-                });
-              }, icon: Icon(Icons.edit)),
-            );
-          })
+          
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          var box = await Hive.openBox('db1');
-          box.put("name", "roman-dewan");
-
-          box.put("age", 12);
-
-          box.put('details', {'name': 'roman', 'age': 20, 'location': 'dhaka'});
-
-          debugPrint(box.get('name'));
-          debugPrint(box.get('age').toString());
-          debugPrint(box.get("details")['age'].toString());
-          debugPrint(box.get("details").toString());
-          setState(() {
-            
-          });
+        onPressed: () {
+          
         },
         child: Icon(Icons.add),
       ),
