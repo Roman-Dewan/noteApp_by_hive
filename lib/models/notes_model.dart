@@ -4,7 +4,7 @@ part 'notes_model.g.dart';
 // command -- >  flutter packages pub run build_runner build
 
 @HiveType(typeId: 0)
-class NotesModel {
+class NotesModel extends HiveObject {
 
   @HiveField(0)
   String title;

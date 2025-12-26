@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_notes/Boxes/boxes.dart';
 import 'package:hive_notes/models/notes_model.dart';
 
@@ -85,6 +84,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 final data = NotesModel(title: _titleTEController.text, description: _descriptionTEController.text);
                 final box = Boxes.getData();
                 box.add(data);
+
+                debugPrint("ttile: ${_titleTEController.text}");
+                debugPrint("ttile: ${_descriptionTEController.text}");
+
+                data.save();
+                _titleTEController.clear();
+                _descriptionTEController.clear();
+
+                Navigator.pop(context);
               },
               child: Text("Add"),
             ),
