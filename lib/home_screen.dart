@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:hive_notes/Boxes/boxes.dart';
 import 'package:hive_notes/models/notes_model.dart';
 
@@ -10,9 +11,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   final TextEditingController _titleTEController = TextEditingController();
-  final TextEditingController _descriptionTEController = TextEditingController();
+  final TextEditingController _descriptionTEController =
+      TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,9 +22,28 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
         backgroundColor: Colors.lightBlue,
       ),
-      body: Column(children: [
-          
-        ],
+      body: ValueListenableBuilder<Box<NotesModel>>(
+        valueListenable: Boxes.getData().listenable(),
+        builder: (context, box, _) {
+          var data = box.values.toList().cast<NotesModel>();
+          return ListView.builder(
+            itemCount: box.length,
+            itemBuilder: (context, index){
+            return Card(
+              elevation: 4,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                child: Column(
+                  crossAxisAlignment: .start, mainAxisAlignment: .start,
+                  children: [
+                    Text(data[index].title.toString()),
+                    Text(data[index].description.toString(), maxLines: 2,overflow: .ellipsis,)
+                  ],
+                ),
+              ),
+            );
+          });
+        },
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
@@ -40,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (context) {
         return AlertDialog(
           title: Text("Add Data"),
-          content:  SingleChildScrollView(
+          content: SingleChildScrollView(
             child: Column(
               children: [
                 // title
@@ -50,9 +70,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    hintText: "Title"
+                    hintText: "Title",
                   ),
-                ), 
+                ),
                 const SizedBox(height: 8),
                 // description
                 TextFormField(
@@ -62,14 +82,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    hintText: "Description"
+                    hintText: "Description",
                   ),
-                ), 
+                ),
               ],
             ),
           ),
           actions: [
-
             // cancel button
             TextButton(
               onPressed: () {
@@ -81,14 +100,17 @@ class _HomeScreenState extends State<HomeScreen> {
             // Add Button
             TextButton(
               onPressed: () {
-                final data = NotesModel(title: _titleTEController.text, description: _descriptionTEController.text);
+                final data = NotesModel(
+                  title: _titleTEController.text,
+                  description: _descriptionTEController.text,
+                );
                 final box = Boxes.getData();
                 box.add(data);
 
                 debugPrint("ttile: ${_titleTEController.text}");
                 debugPrint("ttile: ${_descriptionTEController.text}");
 
-                data.save();
+                // data.save();
                 _titleTEController.clear();
                 _descriptionTEController.clear();
 
