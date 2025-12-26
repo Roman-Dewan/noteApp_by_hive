@@ -48,7 +48,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           Spacer(),
                           // edit
-                          TextButton(onPressed: () {}, child: Icon(Icons.edit)),
+                          TextButton(
+                            onPressed: () {
+                              _updateTask(
+                                data[index],
+                                data[index].title.toString(),
+                                data[index].description.toString(),
+                              );
+                            },
+                            child: Icon(Icons.edit),
+                          ),
                           // delete
                           TextButton(
                             onPressed: () {
@@ -154,7 +163,79 @@ class _HomeScreenState extends State<HomeScreen> {
   }
   // delete task
 
-  void delete(NotesModel notesModel) async{
+  void delete(NotesModel notesModel) async {
     await notesModel.delete();
+  }
+
+  // update task
+
+  Future<void> _updateTask(
+    NotesModel notesModel,
+    String title,
+    String description,
+  ) async {
+    _titleTEController.text = title;
+    _descriptionTEController.text = description;
+
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Update Data"),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                // title
+                TextFormField(
+                  controller: _titleTEController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    hintText: "Title",
+                  ),
+                ),
+                const SizedBox(height: 8),
+                // description
+                TextFormField(
+                  maxLines: 3,
+                  controller: _descriptionTEController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    hintText: "Description",
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            // cancel button
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text("Cancel"),
+            ),
+
+            // Add Button
+            TextButton(
+              onPressed: () {
+                notesModel.title = _titleTEController.text;
+                notesModel.description = _descriptionTEController.text;
+                notesModel.save();
+                
+                _titleTEController.clear();
+                _descriptionTEController.clear();
+
+                Navigator.pop(context);
+              },
+              child: Text("Confirm"),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
